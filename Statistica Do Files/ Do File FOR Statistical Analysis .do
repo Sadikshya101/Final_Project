@@ -1,8 +1,8 @@
 **clear all
 set more off
-use "/Users/sadikshyanepal/Desktop/THA/Final Paper /CMS Data- FULL Variable.dta"
-keep MIG* A1_* A2_* A2A1_* A3_* A4_* A9_* B11_* B11A_* B11B_* B11C_* B12_* B12A_* B12B_* B12C_* B13_* B13A_* B13B_* B13C_* B14_* B14A_* B14B_* B14C_* B17_1_* B17_1A_* B17_1B_* REM* HHID ETHNICITY
-reshape long MIG A1_ A2_ A2A1_ A3_ A4_ A9_ B11_ B11A_ B11B_ B11C_ B12_ B12A_ B12B_ B12C_ B13_ B13A_ B13B_ B13C_ B14_ B14A_ B14B_ B14C_ B17_1_ B17_1A_ B17_1B_ REM, i(HHID) j(year)
+use "/Users/sadikshyanepal/Desktop/THA/Final Paper /CVFS Data- FULL Variable.dta"
+keep MIG* A1_* A2_* A2A1_* A3_* A4_* A9_* B11_* B11A_* B11B_* B11C_* B12_* B12A_* B12B_* B12C_* B13_* B13A_* B13B_* B13C_* B14_* B14A_* B14B_* B14C_* B17_1_* B17_1A_* B17_1B_* C18_* REM* HHID ETHNICITY
+reshape long MIG A1_ A2_ A2A1_ A3_ A4_ A9_ B11_ B11A_ B11B_ B11C_ B12_ B12A_ B12B_ B12C_ B13_ B13A_ B13B_ B13C_ B14_ B14A_ B14B_ B14C_ B17_1_ B17_1A_ B17_1B_ C18_ REM, i(HHID) j(year)
 foreach x of varlist A* B* MIG REM {
 recode `x' (999=.) 
 recode `x' (998=.)
@@ -30,17 +30,11 @@ generate rice_prod= B11B_/B11A_
 generate buck_prod= B17_1B/B17_1A
 generate must_prod= B14B_/B14A_
 gen logincome= log(REM)
-collapse (sum) A2_ A2A1_ A3_ B11_ B11A_ B11B_ B11C_ B12_ B12A_ B12B_ B12C_ B13_ B13A_ B13B_ B13C_ B14_ B14A_ B14B_ B14C_ B17_1_ B17_1A_ B17_1B_ MIG REM, by(year)
+collapse (sum) A2_ A2A1_ A3_ B11_ B11A_ B11B_ B11C_ B12_ B12A_ B12B_ B12C_ B13_ B13A_ B13B_ B13C_ B14_ B14A_ B14B_ B14C_ B17_1_ B17_1A_ B17_1B_ C18_ MIG REM EHTNICITY, by(year)
 generate total_production= B11B_+ B12B_+ B13B_+ B14B_+ B17_1B
-generate propotion_prod=B11B_/total_production 
-regress wheat_prod MIG 
-estimates store m1, title(Model 1)
-regress rice_prod MIG 
-estimates store m2, title(Model 2)
-regress B11B MIG
-estimates store m3, title(Model 3)
-estout m1 m2 m3
-regress rice_prod MIG REM i.ETHNICITY
+*generate propotion_prod=B11B_/total_production 
+*regress wheat_prod MIG 
+*regress rice_prod MIG REM i.ETHNICITY
 *regress on all variables rice, wheat, buckwheat
 *then regress on individual variables to see if things change when produced individually
 *do it as as Model 1, Model 2, and Model 3. 
